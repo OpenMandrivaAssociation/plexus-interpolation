@@ -1,6 +1,6 @@
 Name:           plexus-interpolation
 Version:        1.13
-Release:        3
+Release:        5
 Summary:        Plexus Interpolation API
 
 Group:          Development/Java
