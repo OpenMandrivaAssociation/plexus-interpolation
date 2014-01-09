@@ -1,100 +1,99 @@
+%{?_javapackages_macros:%_javapackages_macros}
 Name:           plexus-interpolation
-Version:        1.13
-Release:        5
+Version:        1.15
+Release:        7.1%{?dist}
 Summary:        Plexus Interpolation API
 
-Group:          Development/Java
+
 License:        ASL 2.0 and ASL 1.1 and MIT
 URL:            http://plexus.codehaus.org/plexus-components/plexus-interpolation
-#svn export http://svn.codehaus.org/plexus/plexus-components/tags/plexus-interpolation-1.13/
-#tar cjf plexus-interpolation-1.13.tar.bz2 plexus-interpolation-1.13/
-Source0:        %{name}-%{version}.tar.bz2
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Source0:        https://github.com/sonatype/%{name}/archive/%{name}-%{version}.tar.gz#/%{name}-%{version}.tar.gz
 
 BuildArch: noarch
 
 BuildRequires: java-devel
 BuildRequires: junit
-BuildRequires: maven2
-BuildRequires: maven2-plugin-resources
-BuildRequires: maven2-plugin-compiler
-BuildRequires: maven2-plugin-jar
-BuildRequires: maven2-plugin-install
-BuildRequires: maven2-plugin-javadoc
-BuildRequires: maven-surefire-maven-plugin
+BuildRequires: maven-local
+BuildRequires: maven-resources-plugin
+BuildRequires: maven-compiler-plugin
+BuildRequires: maven-jar-plugin
+BuildRequires: maven-install-plugin
+BuildRequires: maven-javadoc-plugin
+BuildRequires: maven-surefire-plugin
 BuildRequires: maven-surefire-provider-junit
 BuildRequires: maven-shared-reporting-impl
 BuildRequires: maven-doxia-sitetools
-BuildRequires: plexus-maven-plugin
 
 %description
 Plexus interpolator is the outgrowth of multiple iterations of development
-focused on providing a more modular, flexible interpolation framework for 
-the expression language style commonly seen in Maven, Plexus, and other 
+focused on providing a more modular, flexible interpolation framework for
+the expression language style commonly seen in Maven, Plexus, and other
 related projects.
 
 %package javadoc
-Group:          Development/Java
+
 Summary:        Javadoc for %{name}
 
 %description javadoc
 API documentation for %{name}.
 
-
 %prep
-%setup -q 
-
-mkdir external_repo
-ln -s %{_javadir} external_repo/JPP
+%setup -q -n %{name}-%{name}-%{version}
 
 %build
-export MAVEN_REPO_LOCAL=$(pwd)/.m2/repository
-mvn-jpp \
-        -e \
-        -Dmaven2.jpp.mode=true \
-        -Dmaven.repo.local=$MAVEN_REPO_LOCAL \
-        install javadoc:javadoc
+%mvn_file  : plexus/interpolation
+%mvn_build
 
 %install
-rm -rf %{buildroot}
+%mvn_install
 
-# jars
-install -d -m 0755 %{buildroot}%{_javadir}/plexus
-install -m 644 target/%{name}-%{version}.jar %{buildroot}%{_javadir}/plexus/interpolation-%{version}.jar
+%files -f .mfiles
 
-(cd %{buildroot}%{_javadir}/plexus && for jar in *-%{version}*; \
-    do ln -sf ${jar} `echo $jar| sed "s|-%{version}||g"`; done)
+%files javadoc -f .mfiles-javadoc
 
-%add_to_maven_depmap org.codehaus.plexus plexus-interpolation %{version} JPP/plexus interpolation
+%changelog
+* Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.15-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
-# poms
-install -d -m 755 %{buildroot}%{_datadir}/maven2/poms
-install -pm 644 pom.xml \
-    %{buildroot}%{_datadir}/maven2/poms/JPP.%{name}.pom
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.15-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
-# javadoc
-install -d -m 0755 %{buildroot}%{_javadocdir}/%{name}-%{version}
-cp -pr target/site/api*/* %{buildroot}%{_javadocdir}/%{name}-%{version}/
-ln -s %{name}-%{version} %{buildroot}%{_javadocdir}/%{name}
-rm -rf target/site/api*
+* Wed Feb 06 2013 Java SIG <java-devel@lists.fedoraproject.org> - 1.15-5
+- Update for https://fedoraproject.org/wiki/Fedora_19_Maven_Rebuild
+- Replace maven BuildRequires with maven-local
 
-%post
-%update_maven_depmap
+* Thu Jan 17 2013 Michal Srb <msrb@redhat.com> - 1.15-4
+- Build with xmvn
 
-%postun
-%update_maven_depmap
+* Mon Nov 19 2012 Stanislav Ochotnicky <sochotnicky@redhat.com> - 1.15-3
+- Fix source URL to be stable
 
-%clean
-%{__rm} -rf %{buildroot}
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.15-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
-%files
-%defattr(-,root,root,-)
-%{_javadir}/plexus/*.jar
-%{_datadir}/maven2/poms/*
-%{_mavendepmapfragdir}/*
+* Wed Apr 18 2012 Alexander Kurtakov <akurtako@redhat.com> 1.15-1
+- Update to latest upstream.
 
-%files javadoc
-%defattr(-,root,root,-)
-%{_javadocdir}/%{name}-%{version}
-%{_javadocdir}/%{name}
+* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.14-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
+* Wed Jul 27 2011 Stanislav Ochotnicky <sochotnicky@redhat.com> - 1.14-2
+- Use add_maven_depmap macro
+- Use more precise specification of files
+
+* Tue Jul 26 2011 Jaromir Capik <jcapik@redhat.com> - 1.14-2
+- Removal of plexus-maven-plugin dependency (not needed)
+- Minor spec file changes according to the latest guidelines
+
+* Tue May 17 2011 Alexander Kurtakov <akurtako@redhat.com> 1.14-1
+- Update to upstream 1.14 version.
+- Adapt to current guidelines.
+
+* Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.13-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
+* Tue Dec 22 2009 Alexander Kurtakov <akurtako@redhat.com> 1.13-2
+- Fix review comments.
+
+* Tue Dec 22 2009 Alexander Kurtakov <akurtako@redhat.com> 1.13-1
+- Initial package.
