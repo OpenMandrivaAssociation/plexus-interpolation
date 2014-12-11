@@ -1,10 +1,10 @@
 %{?_javapackages_macros:%_javapackages_macros}
 Name:           plexus-interpolation
-Version:        1.15
-Release:        7.1%{?dist}
+Version:        1.22
+Release:        1%{?dist}
 Summary:        Plexus Interpolation API
 
-
+Group:          System/Libraries
 License:        ASL 2.0 and ASL 1.1 and MIT
 URL:            http://plexus.codehaus.org/plexus-components/plexus-interpolation
 Source0:        https://github.com/sonatype/%{name}/archive/%{name}-%{version}.tar.gz#/%{name}-%{version}.tar.gz
@@ -31,7 +31,7 @@ the expression language style commonly seen in Maven, Plexus, and other
 related projects.
 
 %package javadoc
-
+Group:          Documentation
 Summary:        Javadoc for %{name}
 
 %description javadoc
@@ -52,6 +52,18 @@ API documentation for %{name}.
 %files javadoc -f .mfiles-javadoc
 
 %changelog
+* Fri Nov 21 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.22-1
+- Update to upstream version 1.22
+
+* Thu Oct 23 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.21-1
+- Update to upstream version 1.21
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.15-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Tue Mar 04 2014 Stanislav Ochotnicky <sochotnicky@redhat.com> - 1.15-8
+- Use Requires: java-headless rebuild (#1067528)
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.15-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
@@ -97,3 +109,4 @@ API documentation for %{name}.
 
 * Tue Dec 22 2009 Alexander Kurtakov <akurtako@redhat.com> 1.13-1
 - Initial package.
+

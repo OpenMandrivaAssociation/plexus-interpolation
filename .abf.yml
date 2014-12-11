@@ -1,2 +1,4 @@
-sources:
+removed_sources:
   plexus-interpolation-1.15.tar.gz: 3d19087b97e5c012ff5cae426bf6c68baa0f3d28
+sources:
+  plexus-interpolation-1.22.tar.gz: 141a62e45683e7fcec28f89d30ec14269d23e172
