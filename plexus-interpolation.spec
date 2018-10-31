@@ -1,7 +1,7 @@
 %{?_javapackages_macros:%_javapackages_macros}
 Name:           plexus-interpolation
 Version:        1.15
-Release:        7.3
+Release:        7.4
 Summary:        Plexus Interpolation API
 
 
