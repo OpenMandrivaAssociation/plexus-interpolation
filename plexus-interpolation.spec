@@ -6,7 +6,7 @@ Summary:        Plexus Interpolation API
 
 
 License:        ASL 2.0 and ASL 1.1 and MIT
-URL:            http://plexus.codehaus.org/plexus-components/plexus-interpolation
+URL:            https://plexus.codehaus.org/plexus-components/plexus-interpolation
 Source0:        https://github.com/sonatype/%{name}/archive/%{name}-%{version}.tar.gz#/%{name}-%{version}.tar.gz
 
 BuildArch: noarch
