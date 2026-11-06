@@ -1,35 +1,36 @@
-Name:           plexus-interpolation
-Version:        1.27
-Release:        1
-Summary:        Plexus Interpolation API
-# Most of the code is ASL 2.0, a few source files are ASL 1.1 and some tests are MIT
-License:        Apache-2.0 AND Apache-1.1 AND MIT
-URL:            https://github.com/codehaus-plexus/plexus-interpolation
-BuildArch:      noarch
+Name:		plexus-interpolation
+Version:	1.30.0
+Release:	1
+Summary:	Resolves expression placeholders in strings
+Group:		Development/Java
+License:	ASL 2.0
+URL:		https://github.com/codehaus-plexus/plexus-interpolation
+Source0:	https://github.com/codehaus-plexus/plexus-interpolation/archive/refs/tags/plexus-interpolation-%{version}.tar.gz#/plexus-interpolation-%{version}.tar.gz
 
-Source0:        https://github.com/codehaus-plexus/plexus-interpolation/archive/plexus-interpolation-%{version}.tar.gz
-
-Patch1:         0001-Use-PATH-env-variable-instead-of-JAVA_HOME.patch
-
-BuildRequires:  javapackages-bootstrap
+BuildArch:	noarch
+BuildRequires:	mvn(org.codehaus.plexus:plexus:pom::)
+# Literal, so the first rpmbuild -bs records them before sysjar is installed.
+BuildRequires:	maven
+BuildRequires:	java-current-devel
+BuildSystem:	maven
 
 %description
-Plexus interpolator is the outgrowth of multiple iterations of development
-focused on providing a more modular, flexible interpolation framework for
-the expression language style commonly seen in Maven, Plexus, and other
-related projects.
+Plexus Interpolation resolves expression placeholders in strings.
+1.30.0 caches interpolator answers and adds a feedback value source.
+Tests are skipped.
 
 %prep
-%autosetup -p1 -C
-%pom_add_dep junit:junit:4.13.1:test
-%pom_remove_plugin :maven-release-plugin
-%pom_remove_plugin :maven-scm-publish-plugin
-
-%build
-%mvn_file : plexus/interpolation
-%mvn_build -j
-
-%install
-%mvn_install
+%setup -q -n plexus-interpolation-plexus-interpolation-%{version}
+# The bundle plugin is not packaged, and it is what defines bundle packaging.
+python - <<'PY'
+from pathlib import Path
+path = Path("pom.xml")
+text = path.read_text()
+old = "<packaging>bundle</packaging>"
+if old not in text:
+    raise SystemExit("bundle packaging not found")
+path.write_text(text.replace(old, "<packaging>jar</packaging>", 1))
+PY
 
 %files -f .mfiles
+%doc README.md
